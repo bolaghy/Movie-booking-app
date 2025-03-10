@@ -17,6 +17,12 @@ const movieJoiSchema = Joi.object({
     'string.empty': 'Genre is required',
     'any.required': 'Genre is required',
   }),
+  poster: Joi.string().uri().messages({
+    'string.uri': 'Poster URL must be a valid URL',
+  }),
+  trailer: Joi.string().uri().messages({
+    'string.uri': 'Trailer URL must be a valid URL',
+  }),
   release_date: Joi.date().required().messages({
     'date.base': 'Release date must be a valid date',
     'any.required': 'Release date is required',

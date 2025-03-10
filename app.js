@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
  const userRoutes = require('./Routers/UserRoutes');
 const movieRoutes = require('./Routers/MoviesRoutes');
 const theaterRoutes = require('./Routers/TheaterRoutes');
-// const showRoutes = require('./routes/showRoutes');
-// const bookingRoutes = require('./routes/bookingRoutes');
-// const paymentRoutes = require('./routes/paymentRoutes');
+const showRoutes = require('./Routers/reservationRoutes');
+const bookingRoutes = require('./Routers/BookingRoutes');
+const paymentRoutes = require('./Routers/PaymentRoutes');
 const PORT = process.env.PORT || 3000;
 const api = process.env.api;
 
@@ -23,10 +23,10 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use(`${api}`, userRoutes);
 app.use(`${api}`, movieRoutes);           
-app.use(`${api}`, theaterRoutes);
-// app.use(`${api}`, showRoutes);
-// app.use(`${api}`, bookingRoutes);
-// app.use(`${api}`, paymentRoutes);
+app.use(`${api}`, theaterRoutes);      
+app.use(`${api}`, showRoutes);
+app.use(`${api}`, bookingRoutes);
+app.use(`${api}`, paymentRoutes);
  
 
 // Async function to start the server and connect to the database

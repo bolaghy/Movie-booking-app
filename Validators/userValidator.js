@@ -24,6 +24,12 @@ const registerSchema = Joi.object({
     .messages({
       'string.pattern.base': 'Phone number must be a 11-digit number',
     }),
+    profile_pic: Joi.string().uri().messages({
+    'string.uri': 'Profile picture must be a valid URL', 
+  }),
+  cover_photo: Joi.string().uri().messages({
+    'string.uri': 'Cover photo must be a valid URL',
+  }),
   role: Joi.string().valid('user', 'admin').default('user').messages({
     'any.only': 'Role must be either "user" or "admin"',
   }),

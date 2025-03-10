@@ -59,9 +59,9 @@ const getTheaterById = async (req, res) => {
     if (!theater) {
       return res.status(404).json({ message: 'Theater not found' });
     }
-    res.status(201).json({ success: true, message: 'Theater found', data: theater });
+    res.status(201).json({ success: true, message: 'Theater fetched successfully', data: theater });
     } catch (err) {
-    res.status(500).json({ success: false, message: "Theater failed" ,error: err.message});   
+    res.status(500).json({ success: false, message: "Failed to fetch show" ,error: err.message});   
     }
 };
 
