@@ -3,7 +3,8 @@ const router = express.Router();
 const { createMovie, getAllMovies, getMovieById, 
     updateMovie, deleteMovie, 
     searchMovies, filterMoviesByGenre, 
-    filterMoviesByYear } = require('../Controllers/movieController');
+    filterMoviesByYear, uploadPoster,uploadTrailer } = require('../Controllers/movieController');
+    const upload = require('../Utils/multer');
 
 
 
@@ -30,5 +31,8 @@ router.get('/movies/filter/genre', filterMoviesByGenre);
 
 // Filter movies by release year
 router.get('/movies/filter/year', filterMoviesByYear);   
+// Upload movie poster
+router.post('/movies/poster/:movieId', upload.single('file'), uploadPoster);           
+router.post('/movies/trailer/:movieId', upload.single('file'), uploadTrailer);     
 
-module.exports = router;
+module.exports = router;   

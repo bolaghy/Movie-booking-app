@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Movie = require('../Models/moviesModel'); 
 const movieJoiSchema = require('../Validators/movieValidator'); 
+const { uploadFile } = require('../Utils/uploadPhotoVideo');
 
 // Create a new movie
 const createMovie = async (req, res) => {
@@ -17,6 +18,7 @@ const createMovie = async (req, res) => {
   res.status(500).json({ success: false, message: "Movie creation failed" ,error: err.message});
 }
 };
+
 
 // Get all movies
 const getAllMovies = async (req, res) => {
@@ -150,6 +152,48 @@ const searchMovies = async (req, res) => {
 }
   };
 
+  const uploadPoster = async (req, res) => {
+    try {
+      const { movieId } = req.params;
+      const file = req.file.path; // Path to the uploaded file (using Multer)
+  
+      // Upload file to Cloudinary
+      const posterUrl = await uploadFile(file, 'movie_posters');
+  
+      // Update movie poster
+      const movie = await Movie.findByIdAndUpdate(
+        movieId,
+        { poster: posterUrl },
+        { new: true }
+      );
+  
+      res.status(200).json({ success: true, message: 'Poster uploaded successfully', data: movie });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Failed to upload poster', error: err.message });
+    }
+  };
+
+  const uploadTrailer = async (req, res) => {
+    try {
+      const { movieId } = req.params;
+      const file = req.file.path; // Path to the uploaded file (using Multer)
+  
+      // Upload file to Cloudinary
+      const trailerUrl = await uploadFile(file, 'trailers');
+  
+      // Update movie trailer
+      const movie = await Movie.findByIdAndUpdate(
+        movieId,
+        { trailer: trailerUrl },
+        { new: true }
+      );
+                       
+      res.status(200).json({ success: true, message: 'Trailer uploaded successfully', data: movie });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Failed to upload trailer', error: err.message });
+    }
+  };
+
 module.exports = {
   createMovie,
   getAllMovies,
@@ -158,5 +202,7 @@ module.exports = {
   deleteMovie,
   searchMovies,
   filterMoviesByGenre,
-  filterMoviesByYear
+  filterMoviesByYear,
+  uploadPoster,
+  uploadTrailer
 };

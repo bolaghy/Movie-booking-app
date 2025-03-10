@@ -3,6 +3,7 @@ const { registerSchema, loginSchema } = require('../Validators/userValidator');
 const User = require('../Models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { uploadFile } = require('../Utils/uploadPhotoVideo');
 
 
 // Register a new user
@@ -56,10 +57,10 @@ const login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.status(201).json({ success: true, 
       message: 'Login succefully', 
-      data: user._id, name:user.name, Email:user.email, Role:user.role, token });
-  } catch (err) {    
-    res.status(500).json({ success: false, message: "Registeration fail" ,error: err.message});
-  }
+      data: user._id, name:user.name, Email:user.email, Role:user.role,  token  });
+    } catch (err) {    
+      res.status(500).json({ success: false, message: "Registeration fail" ,error: err.message});
+    }
 };
 
 const getAllUsers = async (req, res) => {
@@ -104,5 +105,49 @@ const getAllUsers = async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, error: err.message});
   }
-};                       
-module.exports = { register, login, getAllUsers};
+}; 
+
+const updateProfilePicture = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const file = req.file.path; // Path to the uploaded file (using Multer)
+
+    // Upload file to Cloudinary
+    const profilePictureUrl = await uploadFile(file, 'profile_pictures');
+
+    // Update user profile picture
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profile_picture: profilePictureUrl },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, message: 'Profile picture updated successfully', data: user });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to update profile picture', error: err.message });
+  }
+};
+
+const updateCoverPhoto = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const file = req.file.path; // Path to the uploaded file (using Multer)
+
+    // Upload file to Cloudinary
+    const coverPhotoUrl = await uploadFile(file, 'cover_photos');
+
+    // Update user cover photo
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { cover_photo: coverPhotoUrl },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, message: 'Cover photo updated successfully', data: user });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to update cover photo', error: err.message });
+  }
+};
+
+
+module.exports = { register, login, getAllUsers, updateProfilePicture, updateCoverPhoto};
